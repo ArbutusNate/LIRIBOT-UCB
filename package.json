@@ -1,0 +1,25 @@
+{
+  "name": "LIRIBOT-UCB",
+  "version": "1.0.0",
+  "description": "A Command-Line Program",
+  "main": "keys.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArbutusNate/LIRIBOT-UCB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArbutusNate/LIRIBOT-UCB/issues"
+  },
+  "homepage": "https://github.com/ArbutusNate/LIRIBOT-UCB#readme",
+  "dependencies": {
+    "node-spotify-api": "^1.0.5",
+    "request": "^2.81.0",
+    "twitter": "^1.7.1"
+  }
+}
