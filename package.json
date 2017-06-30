@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/ArbutusNate/LIRIBOT-UCB#readme",
   "dependencies": {
+    "child_process": "^1.0.2",
+    "figlet": "^1.2.0",
+    "fs": "0.0.1-security",
     "node-spotify-api": "^1.0.5",
     "request": "^2.81.0",
     "twitter": "^1.7.1"
