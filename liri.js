@@ -30,31 +30,20 @@ function liri(x, argument1){
           var tweetlength = (Object.keys(tweets)).length;
           custfig("My Tweets", function(){
             for (var i = 0; i < tweetlength; i++){
-              console.log("+++++++ " + i + " +++++++");
-              console.log(tweets[i].created_at);
-              console.log(tweets[i].text);
+              loglog("+++++++ " + i + " +++++++");
+              loglog(tweets[i].created_at);
+              loglog(tweets[i].text);
             }
           });
         }
       });
       break;
     case "spotify-this-song":
-      spotify.search({ type: "track", query: argument1, limit: 1 }, function(err, data) {
-        if (err) {
-          return console.log("Error occurred: " + err);
-        }
-        var songdata = data.tracks;
-        custfig("Song Info", function(){
-            console.log("<====> Track Name <====>");
-            console.log(songdata.items[0].name);
-            console.log("<====>   Artist   <====>");
-            console.log(songdata.items[0].artists[0].name);
-            console.log("<====>  Preview   <====>");
-            console.log(songdata.items[0].preview_url);
-            console.log("<====>   Album   <====>");
-            console.log(songdata.items[0].album.name);
-        });
-      });
+    if(argument1 != undefined){
+      songsearch(argument1)
+    } else {
+      songsearch("The Sign Ace")
+    }
       break;
     case "movie-this":
       var omdbURL = "http://www.omdbapi.com/?apikey=40e9cece&t=";
@@ -65,42 +54,76 @@ function liri(x, argument1){
           omdbURL = omdbURL + ("+" + process.argv[i]);
         }
       }
-      request(omdbURL, function (error, response, body) {
-        var movie = JSON.parse(body);
-        custfig("Movies!", function(){
-          console.log("<====>  Title  <====>");
-          console.log(movie.Title);
-          console.log("<====>  Year   <====>");
-          console.log(movie.Year);
-          console.log("<==> IMDB Rating <==>");
-          console.log(movie.imdbRating);
-          console.log("<===> RT Rating <===>");
-          console.log(movie.Ratings[1].Value);
-          console.log("<===>  Country  <===>");
-          console.log(movie.Country);
-          console.log("<===>  Language <===>");
-          console.log(movie.Language);
-          console.log("<====>  Plot   <====>");
-          console.log(movie.Plot);
-          console.log("<===>   Actors  <===>");
-          console.log(movie.Actors);
-        });
-      });
+      if(argument1 != undefined){
+        moviesearch(omdbURL);
+      } else {
+        moviesearch((omdbURL + "Mr. Nobody"))
+      }
       break;
     case "do-what-it-says":
       fs.readFile("random.txt", "utf-8", function(err, data){
         var splits = data.split(",");
-        console.log(splits[0] + " " + splits[1]);
         liri(splits[0], splits[1]);
       });
       break;
+    case "clear-log":
+      fs.writeFile("./log.txt", " ", "utf-8");
+      console.log("Log Cleared");
+      break;
     case "help":
       custfig("Help", function(){
-        console.log("my-tweets                    -- Shows my last 20 tweets.");
-        console.log("spotify-this-song <songname> -- Get information about a song.");
-        console.log("movie-this <title>           -- Get information about a movie.");
+        loglog("my-tweets                    -- Shows my last 20 tweets.");
+        loglog("spotify-this-song <songname> -- Get information about a song.");
+        loglog("movie-this <title>           -- Get information about a movie.");
       });
   }
+}
+function loglog (loggedText){
+  console.log(loggedText);
+    fs.appendFile("./log.txt", (loggedText + '\r\n'), "utf-8");
+}
+
+function songsearch (arg1){
+  spotify.search({ type: "track", query: arg1, limit: 1 }, function(err, data) {
+    if (err) {
+      return loglog("Error occurred: " + err);
+    }
+    var songdata = data.tracks.items[0];
+    custfig("Song Info", function(){
+        loglog("<====> Track Name <====>");
+        loglog(songdata.name);
+        loglog("<====>   Artist   <====>");
+        loglog(songdata.artists[0].name);
+        loglog("<====>  Preview   <====>");
+        loglog(songdata.preview_url);
+        loglog("<====>   Album   <====>");
+        loglog(songdata.album.name);
+    });
+  });
+}
+
+function moviesearch (input){
+  request(input, function (error, response, body) {
+    var movie = JSON.parse(body);
+    custfig("Movies!", function(){
+      loglog("<====>  Title  <====>");
+      loglog(movie.Title);
+      loglog("<====>  Year   <====>");
+      loglog(movie.Year);
+      loglog("<==> IMDB Rating <==>");
+      loglog(movie.imdbRating);
+      loglog("<===> RT Rating <===>");
+      loglog(movie.Ratings[1].Value);
+      loglog("<===>  Country  <===>");
+      loglog(movie.Country);
+      loglog("<===>  Language <===>");
+      loglog(movie.Language);
+      loglog("<====>  Plot   <====>");
+      loglog(movie.Plot);
+      loglog("<===>   Actors  <===>");
+      loglog(movie.Actors);
+    });
+  });
 }
 function custfig (y, callback){
   figlet(y, function(err, data) {
